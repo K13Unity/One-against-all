@@ -11,10 +11,10 @@ public class MenuScrean : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _score;
 
 
-
-    public void Init(int score)
+    public void Init(int score, bool isGameOver = false)
     {
         _score.text = $"Score: {score}";
+        _clouseButton.gameObject.SetActive(!isGameOver);
     }
 
     private void OnEnable()
@@ -38,5 +38,4 @@ public class MenuScrean : MonoBehaviour
     {
         GameController.Instance.SetGamePauset(false);
     }
-    
 }

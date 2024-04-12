@@ -19,8 +19,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] TextMeshProUGUI _comboPoints;
     [SerializeField] TextMeshProUGUI _healthText;
 
-    private int _pointsForCombo = 10;
-    private int _pointForDamage = 10;
+    private int _pointsForCombo;
+    private int _pointForDamage = 1;
     private int _attackDamage = 1;
     private int _currentHealth = 10;
     private float _timeBetweenAttack;
@@ -33,8 +33,8 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        _healthText.text = "X-" + _currentHealth.ToString();
-        _comboPoints.text = "Points - " + _pointsForCombo.ToString();
+        _healthText.text = _currentHealth.ToString();
+        _comboPoints.text = "Kill - " + _pointsForCombo.ToString();
     }
     private void Update()
     {
@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damage)
     {
         _currentHealth -= damage;
-        _healthText.text = "X-" + _currentHealth.ToString();
+        _healthText.text = _currentHealth.ToString();
         if (_currentHealth <= 0)
         {
             Die();
@@ -126,10 +126,11 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
+        GameController.Instance.GameOver();
         Destroy(gameObject);
     }
 
-    internal void Init(int pointsForCombo)
+    public void AddComboPoints(int pointsForCombo)
     {
         _pointsForCombo += pointsForCombo;
         _comboPoints.text = "Points: " + _pointsForCombo.ToString();

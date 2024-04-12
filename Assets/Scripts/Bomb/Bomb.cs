@@ -9,7 +9,7 @@ public class Bomb : MonoBehaviour
     [SerializeField] float _radiusDamage = 0.5f;
     [SerializeField] float _throwingSpeed = 5.0f;
 
-    private int _pointsForCombo = 30;
+    private int _pointsForCombo = 1;
     private Vector2 _direction;
     private int _damage = 3;
 

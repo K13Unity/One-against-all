@@ -8,7 +8,7 @@ public class Shuriken : MonoBehaviour
 
     private float _shurikenLifeTime = 5.0f;
     private int _shurikenDamage;
-    private int _pointForCombo = 10;
+    private int _pointForCombo = 1;
 
 
     private void Start()

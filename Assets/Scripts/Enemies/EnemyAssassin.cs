@@ -16,7 +16,7 @@ public class EnemyAssassin : MonoBehaviour
     private int _attackDamage = 1;
     private int _health = 3;
     private int _currentHealth;
-    private int _pointsForCombo = 10;
+    private int _pointsForCombo = 1;
 
     public event Action OnEnemyDeath;
 
@@ -81,7 +81,7 @@ public class EnemyAssassin : MonoBehaviour
     public void TakeDamage(int damage)
     {
         _currentHealth -= damage;
-        _player.Init(_pointsForCombo);
+        _player.AddComboPoints(_pointsForCombo);
         if (_currentHealth <= 0)
         {
             OnEnemyDeath?.Invoke();
@@ -92,6 +92,7 @@ public class EnemyAssassin : MonoBehaviour
 
     protected void Die()
     {
+        GameController.Instance.AddScore();
         Destroy(gameObject);
     }
 }   

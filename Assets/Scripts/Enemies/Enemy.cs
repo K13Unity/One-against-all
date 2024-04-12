@@ -45,10 +45,7 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        if (!_canMove)
-        {
-            return;
-        }
+        if (!_canMove || _player == null) return;
 
         _distanceToPlayer = Vector2.Distance(transform.position, _player.transform.position);
 
@@ -114,7 +111,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage, int pointForCombo)
     {
         _currentHealth -= damage;
-        _player.Init(pointForCombo);
+        _player.AddComboPoints(pointForCombo);
         _canMove = false;
         PushAway();
         if (_currentHealth <= 0)
@@ -125,6 +122,7 @@ public class Enemy : MonoBehaviour
 
     protected void Die()
     {
+        GameController.Instance.AddScore();
         Destroy(gameObject);
     }
 }
