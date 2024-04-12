@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class EnemiesSpawner : MonoBehaviour
 {
-    [SerializeField] PlayerController _playerController;
-    [SerializeField] EnemyAssassin _enemyAssassinPrefab;
-    [SerializeField] List<Transform> _spawnPoint;
-    [SerializeField] List<Ledge> _ledge;
-    [SerializeField] Enemy _enemyPrefab;
-    [SerializeField] float _lastCreationTime = 2f;
+    [SerializeField] private PlayerController _playerController;
+    [SerializeField] private EnemyAssassin _enemyAssassinPrefab;
+    [SerializeField] private List<Transform> _spawnPoint;
+    [SerializeField] private List<Ledge> _ledge;
+    [SerializeField] private Enemy _enemyPrefab;
+    [SerializeField] private float _lastCreationTime = 2f;
 
 
     private float _intervalTime = 0;

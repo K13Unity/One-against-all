@@ -1,15 +1,15 @@
 using Cysharp.Threading.Tasks;
-using Cysharp.Threading.Tasks.Triggers;
 using System;
 using UnityEngine;
 
 public class EnemyAssassin : MonoBehaviour
 {
-    [SerializeField] Animator _animator;
-    [SerializeField] Shuriken _shurikenPrefab;
-    [SerializeField] Transform _attackPoint;
-    [SerializeField] LayerMask _playerLayer;
-    [SerializeField] float _moveSpeed = 5.0f;
+    [SerializeField] private Animator _animator;
+    [SerializeField] private AudioSource _takeDamageSound;
+    [SerializeField] private Shuriken _shurikenPrefab;
+    [SerializeField] private Transform _attackPoint;
+    [SerializeField] private LayerMask _playerLayer;
+    [SerializeField] private float _moveSpeed = 5.0f;
 
     private PlayerController _player;
     private Transform _targetPoint;
@@ -80,6 +80,7 @@ public class EnemyAssassin : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        _takeDamageSound.Play();
         _currentHealth -= damage;
         _player.AddComboPoints(_pointsForCombo);
         if (_currentHealth <= 0)
@@ -90,7 +91,7 @@ public class EnemyAssassin : MonoBehaviour
         }
     }
 
-    protected void Die()
+    private void Die()
     {
         GameController.Instance.AddScore();
         Destroy(gameObject);

@@ -100,10 +100,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9567fc04c0295fe4cb35bd7fd7377b2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _explosionPrefab: {fileID: 1547961247040964741, guid: b88cd24ad1a1ebd4aa21bbbb347ab152, type: 3}
+  _attackPoint: {fileID: 6210332463273597702}
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 8
-  _attackPoint: {fileID: 6210332463273597702}
   _radiusDamage: 7
   _throwingSpeed: 25
 --- !u!58 &7924891337976206984

@@ -1,13 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
-    [SerializeField] LayerMask _enemyLayer;
-    [SerializeField] Transform _attackPoint;
-    [SerializeField] float _radiusDamage = 0.5f;
-    [SerializeField] float _throwingSpeed = 5.0f;
+    [SerializeField] private Explosion _explosionPrefab;
+    [SerializeField] private Transform _attackPoint;
+    [SerializeField] private LayerMask _enemyLayer;
+    [SerializeField] private float _radiusDamage = 0.5f;
+    [SerializeField] private float _throwingSpeed = 5.0f;
 
     private int _pointsForCombo = 1;
     private Vector2 _direction;
@@ -29,7 +29,8 @@ public class Bomb : MonoBehaviour
         if (ground != null)
         {
             BombExplosion();
-            Destroy(gameObject);
+            Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+            DestroyBomb();
         }
     }
 
@@ -48,5 +49,10 @@ public class Bomb : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(_attackPoint.position, _radiusDamage);
+    }
+    
+    private void DestroyBomb()
+    {
+        Destroy(gameObject);
     }
 }

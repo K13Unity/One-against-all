@@ -1,23 +1,25 @@
-using System;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] Rigidbody2D _rigidbody;
-    [SerializeField] Shuriken _shurikenPrefab;
-    [SerializeField] Bomb _bombPrefab;
-    [SerializeField] Animator _animator;
-    [SerializeField] Transform _shurikenCreationPoint;
-    [SerializeField] Transform _bombCreationPoint;
-    [SerializeField] Transform _attackPoint;
-    [SerializeField] Transform _groundCheck;
-    [SerializeField] LayerMask _groundLayer;
-    [SerializeField] LayerMask _enemyLayer;
-    [SerializeField] float _attackRange = 0.5f;
-    [SerializeField] TextMeshProUGUI _comboPoints;
-    [SerializeField] TextMeshProUGUI _healthText;
+    [SerializeField] private TextMeshProUGUI _comboPoints;
+    [SerializeField] private TextMeshProUGUI _healthText;
+    [SerializeField] private AudioSource _jumpSound;
+    [SerializeField] private AudioSource _attackSound;
+    [SerializeField] private AudioSource _takeDamageSound;
+    [SerializeField] private Rigidbody2D _rigidbody;
+    [SerializeField] private Shuriken _shurikenPrefab;
+    [SerializeField] private Animator _animator;
+    [SerializeField] private Transform _shurikenCreationPoint;
+    [SerializeField] private Transform _bombCreationPoint;
+    [SerializeField] private Transform _attackPoint;
+    [SerializeField] private Transform _groundCheck;
+    [SerializeField] private Bomb _bombPrefab;
+    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private LayerMask _enemyLayer;
+    [SerializeField] private float _attackRange = 0.5f;
 
     private int _pointsForCombo;
     private int _pointForDamage = 1;
@@ -26,15 +28,15 @@ public class PlayerController : MonoBehaviour
     private float _timeBetweenAttack;
     private float _startTimeBetweenAttack = 0.07f;
     private float _radiusGroundCheck = 0.1f;
-    private float _jumpForce = 60.0f;
-    public bool _isGrounded;
+    private float _jumpForce = 65.0f;
     private bool _isThrowBomb = false;
+    public bool _isGrounded;
 
 
     private void Start()
     {
         _healthText.text = _currentHealth.ToString();
-        _comboPoints.text = "Kill - " + _pointsForCombo.ToString();
+        _comboPoints.text = "Hit - " + _pointsForCombo.ToString();
     }
     private void Update()
     {
@@ -72,7 +74,9 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W) && _isGrounded)
         {
             _rigidbody.velocity = Vector2.up * _jumpForce;
+            PlaySoundJump();
             _isThrowBomb = false;
+           
         }
     }
     private void LaunchShuriken(Vector2 direction)
@@ -86,6 +90,8 @@ public class PlayerController : MonoBehaviour
         shuriken.transform.position = _shurikenCreationPoint.position;
         shuriken.Init(_attackDamage, direction);
     }
+
+
     private void ThrowBomb(Vector2 directoin)
     {
         Bomb bomb = Instantiate(_bombPrefab);
@@ -93,8 +99,10 @@ public class PlayerController : MonoBehaviour
         bomb.Init(directoin);
     }
 
-    private void AttackAnimation()
+    private async void AttackAnimation()
     {
+        _attackSound.Play();
+        await UniTask.Delay(100);
         _animator.SetTrigger("Attack");
     }
 
@@ -116,6 +124,7 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        _takeDamageSound.Play();
         _currentHealth -= damage;
         _healthText.text = _currentHealth.ToString();
         if (_currentHealth <= 0)
@@ -133,6 +142,11 @@ public class PlayerController : MonoBehaviour
     public void AddComboPoints(int pointsForCombo)
     {
         _pointsForCombo += pointsForCombo;
-        _comboPoints.text = "Points: " + _pointsForCombo.ToString();
+        _comboPoints.text = "Hit " + _pointsForCombo.ToString();
+    }
+    private async void PlaySoundJump()
+    {
+        await UniTask.Delay(700);
+        _jumpSound.Play();
     }
 }

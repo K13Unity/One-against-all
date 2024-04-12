@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] Animator _animator;
-    [SerializeField] Transform _attackPoint;
-    [SerializeField] float _moveSpeed = 5.0f;
-    [SerializeField] LayerMask _playerLayer;
-    [SerializeField] float _punchDistance = 15.0f;
-    [SerializeField] float _attackRange = 0.5f;
+    [SerializeField] private Animator _animator;
+    [SerializeField] private Transform _attackPoint;
+    [SerializeField] private LayerMask _playerLayer;
+    [SerializeField] private float _moveSpeed = 5.0f;
+    [SerializeField] private float _punchDistance = 15.0f;
+    [SerializeField] private float _attackRange = 0.5f;
 
     private PlayerController _player;
 
@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
 
 
 
-    protected void Start()
+    private void Start()
     {
         _currentHealth = _health;
     }
@@ -120,7 +120,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    protected void Die()
+    private void Die()
     {
         GameController.Instance.AddScore();
         Destroy(gameObject);

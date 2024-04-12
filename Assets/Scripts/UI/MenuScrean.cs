@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuScrean : MonoBehaviour
@@ -13,7 +12,7 @@ public class MenuScrean : MonoBehaviour
 
     public void Init(int score, bool isGameOver = false)
     {
-        _score.text = $"Score: {score}";
+        _score.text = $"Kill: {score}";
         _clouseButton.gameObject.SetActive(!isGameOver);
     }
 
@@ -28,7 +27,7 @@ public class MenuScrean : MonoBehaviour
     {
         GameController.Instance.RestartGame();
     }
-
+    
     private void Exit()
     {
         GameController.Instance.Exit();

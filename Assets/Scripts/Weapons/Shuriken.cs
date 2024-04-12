@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Shuriken : MonoBehaviour
 {
-    [SerializeField] float _shurikenSpeed = 10.0f;
+    [SerializeField] private float _shurikenSpeed = 10.0f;
 
     private Vector2 _direction;
 
