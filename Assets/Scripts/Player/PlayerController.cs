@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask _enemyLayer;
     [SerializeField] private float _attackRange = 0.5f;
 
-    private int _pointsForCombo;
+    private int _pointsForHit;
     private int _pointForDamage = 1;
     private int _attackDamage = 1;
     private int _currentHealth = 10;
@@ -36,8 +36,9 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         _healthText.text = _currentHealth.ToString();
-        _comboPoints.text = "Hit - " + _pointsForCombo.ToString();
+        _comboPoints.text = "Hit - " + _pointsForHit.ToString();
     }
+
     private void Update()
     {
         _isGrounded = Physics2D.OverlapCircle(_groundCheck.position, _radiusGroundCheck, _groundLayer);
@@ -66,10 +67,7 @@ public class PlayerController : MonoBehaviour
                 else return;
             }
         }
-        else
-        {
-            _timeBetweenAttack -= Time.deltaTime;
-        }
+        else _timeBetweenAttack -= Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.W) && _isGrounded)
         {
@@ -83,14 +81,10 @@ public class PlayerController : MonoBehaviour
     {
         
         Shuriken shuriken = Instantiate(_shurikenPrefab);
-        if (direction == Vector2.left)
-        {
-            shuriken.transform.localScale = new Vector3(-1, 1, 1);
-        }
+        if (direction == Vector2.left) shuriken.transform.localScale = new Vector3(-1, 1, 1);
         shuriken.transform.position = _shurikenCreationPoint.position;
         shuriken.Init(_attackDamage, direction);
     }
-
 
     private void ThrowBomb(Vector2 directoin)
     {
@@ -111,15 +105,7 @@ public class PlayerController : MonoBehaviour
         _timeBetweenAttack = _startTimeBetweenAttack;
 
         Collider2D enemy = Physics2D.OverlapCircle(_attackPoint.position, _attackRange, _enemyLayer);
-        if (enemy != null)
-        {
-            enemy.GetComponent<Enemy>().TakeDamage(_attackDamage, _pointForDamage);
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(_attackPoint.position, _attackRange);
+        if (enemy != null) enemy.GetComponent<Enemy>().TakeDamage(_attackDamage, _pointForDamage);
     }
 
     public void TakeDamage(int damage)
@@ -127,10 +113,7 @@ public class PlayerController : MonoBehaviour
         _takeDamageSound.Play();
         _currentHealth -= damage;
         _healthText.text = _currentHealth.ToString();
-        if (_currentHealth <= 0)
-        {
-            Die();
-        }
+        if (_currentHealth <= 0) Die();
     }
 
     private void Die()
@@ -141,9 +124,10 @@ public class PlayerController : MonoBehaviour
 
     public void AddComboPoints(int pointsForCombo)
     {
-        _pointsForCombo += pointsForCombo;
-        _comboPoints.text = "Hit " + _pointsForCombo.ToString();
+        _pointsForHit += pointsForCombo;
+        _comboPoints.text = "Hit " + _pointsForHit.ToString();
     }
+
     private async void PlaySoundJump()
     {
         await UniTask.Delay(700);

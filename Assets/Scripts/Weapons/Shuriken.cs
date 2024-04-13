@@ -19,7 +19,6 @@ public class Shuriken : MonoBehaviour
     private void Update()
     {
         if (_direction != Vector2.zero) transform.Translate(_direction * _shurikenSpeed * Time.deltaTime);
-        
     }
 
     public void Init (int damage, Vector2 direction)
@@ -30,19 +29,21 @@ public class Shuriken : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        EnemyAssassin enemyAssassin = collision.GetComponent<EnemyAssassin>();
         PlayerController player = collision.GetComponent<PlayerController>();
-        Enemy enemy = collision.GetComponent<Enemy>();
         if (player != null)
         {
             player.TakeDamage(_shurikenDamage);
             Destroy(gameObject);
         }
+
+        EnemyAssassin enemyAssassin = collision.GetComponent<EnemyAssassin>();
         if (enemyAssassin != null)
         {
             enemyAssassin.TakeDamage(_shurikenDamage);
             Destroy(gameObject);
         }
+
+        Enemy enemy = collision.GetComponent<Enemy>();
         if (enemy != null)
         {
             enemy.TakeDamage(_shurikenDamage, _pointForCombo);

@@ -9,9 +9,5 @@ public class Explosion : MonoBehaviour
         _bombSound.Play();
         Destroy(gameObject, 0.5f);
     }
-
-    void Update()
-    {
-        
-    }
 }
+   

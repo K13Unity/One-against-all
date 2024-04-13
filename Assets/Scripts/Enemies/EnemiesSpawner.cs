@@ -13,13 +13,12 @@ public class EnemiesSpawner : MonoBehaviour
 
     private float _intervalTime = 0;
 
-    void Update()
+    private void Update()
     {
         ReverseTimeFlow();
-
     }
 
-    void ReverseTimeFlow()
+    private void ReverseTimeFlow()
     {
         _intervalTime += Time.deltaTime;
         if (_intervalTime >= _lastCreationTime)

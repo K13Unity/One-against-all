@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class Bomb : MonoBehaviour
@@ -30,7 +29,7 @@ public class Bomb : MonoBehaviour
         {
             BombExplosion();
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
-            DestroyBomb();
+            Destroy(gameObject);
         }
     }
 
@@ -45,14 +44,5 @@ public class Bomb : MonoBehaviour
                 nearbyEnemy.TakeDamage(_damage, _pointsForCombo);
             }
         }
-    }
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(_attackPoint.position, _radiusDamage);
-    }
-    
-    private void DestroyBomb()
-    {
-        Destroy(gameObject);
     }
 }

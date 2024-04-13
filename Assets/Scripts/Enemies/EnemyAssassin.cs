@@ -4,49 +4,45 @@ using UnityEngine;
 
 public class EnemyAssassin : MonoBehaviour
 {
-    [SerializeField] private Animator _animator;
     [SerializeField] private AudioSource _takeDamageSound;
-    [SerializeField] private Shuriken _shurikenPrefab;
     [SerializeField] private Transform _attackPoint;
+    [SerializeField] private Animator _animator;
+    [SerializeField] private Shuriken _shurikenPrefab;
     [SerializeField] private LayerMask _playerLayer;
     [SerializeField] private float _moveSpeed = 5.0f;
 
     private PlayerController _player;
-    private Transform _targetPoint;
+    private Transform _movingTargetPoint;
     private int _attackDamage = 1;
-    private int _health = 3;
+    private int _maxHealth = 3;
     private int _currentHealth;
     private int _pointsForCombo = 1;
 
     public event Action OnEnemyDeath;
 
 
-    protected void Start()
+    private void Start()
     {
-        _currentHealth = _health;
-
+        _currentHealth = _maxHealth;
     }
 
     public void Init(Transform targetPoint, PlayerController player)
     {
         _player = player;
-        _targetPoint = targetPoint;
-        if (targetPoint.position.x < transform.position.x)
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
+        _movingTargetPoint = targetPoint;
+        if (targetPoint.position.x < transform.position.x) transform.localScale = new Vector3(-1, 1, 1);
     }
 
 
     private void Update()
     {
-        if (_targetPoint != null)
+        if (_movingTargetPoint != null)
         {
-            transform.position = Vector2.MoveTowards(transform.position, _targetPoint.position, _moveSpeed * Time.deltaTime);
-            if (Vector2.Distance(transform.position, _targetPoint.position) < 0.1f)
+            transform.position = Vector2.MoveTowards(transform.position, _movingTargetPoint.position, _moveSpeed * Time.deltaTime);
+            if (Vector2.Distance(transform.position, _movingTargetPoint.position) < 0.1f)
             {
-                transform.position = _targetPoint.position;
-                _targetPoint = null;
+                transform.position = _movingTargetPoint.position;
+                _movingTargetPoint = null;
                 AnimationIdle();
             }
         }
@@ -74,7 +70,6 @@ public class EnemyAssassin : MonoBehaviour
         shuriken.transform.position = _attackPoint.position;
         shuriken.Init(_attackDamage, directionToPlayer);
         if (directionToPlayer.x < 0) shuriken.transform.localScale = new Vector3(-1, 1, 1);
-        else shuriken.transform.localScale = new Vector3(1, 1, 1);
         AnimationIdle();
     }
 
@@ -85,14 +80,13 @@ public class EnemyAssassin : MonoBehaviour
         _player.AddComboPoints(_pointsForCombo);
         if (_currentHealth <= 0)
         {
-            OnEnemyDeath?.Invoke();
-            OnEnemyDeath -= OnEnemyDeath;
             Die();
         }
     }
 
     private void Die()
     {
+        OnEnemyDeath?.Invoke();
         GameController.Instance.AddScore();
         Destroy(gameObject);
     }

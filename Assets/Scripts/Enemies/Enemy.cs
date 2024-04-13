@@ -1,8 +1,6 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-
-
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
@@ -15,7 +13,7 @@ public class Enemy : MonoBehaviour
     private PlayerController _player;
 
     private int _attackDamage = 1;
-    private int _health = 3;
+    private int _maxHealth = 3;
     private int _currentHealth;
     private float _distanceToPlayer;
     private float _moveDirection;
@@ -27,7 +25,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        _currentHealth = _health;
+        _currentHealth = _maxHealth;
     }
 
     public void Init(PlayerController player)
@@ -38,9 +36,8 @@ public class Enemy : MonoBehaviour
 
     private void DecideMovementDirection()
     {
-        float direction = Mathf.Sign(_player.transform.position.x - transform.position.x);
-        _moveDirection = direction;
-        LookAtThePlayer();
+        _moveDirection = Mathf.Sign(_player.transform.position.x - transform.position.x);
+        transform.localScale = new Vector3(_moveDirection, 1, 1);
     }
 
     private void Update()
@@ -49,19 +46,9 @@ public class Enemy : MonoBehaviour
 
         _distanceToPlayer = Vector2.Distance(transform.position, _player.transform.position);
 
-        if (_distanceToPlayer > _pushAwayDistance)
-        {
-            UpdateDirectionTowardsPlayer();
-        }
-
-        if (_distanceToPlayer >= _punchDistance)
-        {
-            transform.Translate(new Vector2(_moveDirection, 0) * _moveSpeed * Time.deltaTime);
-        }
-        else
-        {
-            AnimationAttackPlayer();
-        }
+        if (_distanceToPlayer > _pushAwayDistance) DecideMovementDirection();
+        if (_distanceToPlayer >= _punchDistance) transform.Translate(new Vector2(_moveDirection, 0) * _moveSpeed * Time.deltaTime);
+        else AnimationAttackPlayer();
     }
 
     private  void AnimationAttackPlayer()
@@ -72,38 +59,12 @@ public class Enemy : MonoBehaviour
     private void AttackPlayer()
     {
         Collider2D player = Physics2D.OverlapCircle(_attackPoint.position, _attackRange, _playerLayer);
-        if (player != null)
-        {
-            player.GetComponent<PlayerController>().TakeDamage(_attackDamage);
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(_attackPoint.position, _attackRange);
-    }
-
-    private void UpdateDirectionTowardsPlayer()
-    {
-        _moveDirection = Mathf.Sign(_player.transform.position.x - transform.position.x);
-        LookAtThePlayer(); 
-    }
-
-    private void LookAtThePlayer()
-    {
-        transform.localScale = new Vector3(_moveDirection, 1, 1);
+        if (player != null) player.GetComponent<PlayerController>().TakeDamage(_attackDamage);
     }
 
     private async void PushAway()
     {
-        if (transform.localPosition.x < 1)
-        {
-            transform.Translate(Vector2.left * 4f);
-        }
-        else
-        {
-            transform.Translate(Vector2.right * 4f);
-        }
+        transform.Translate(transform.localPosition.x < 1 ? Vector2.left * 4f : Vector2.right * 4f);
         await UniTask.Delay(1000);
         _canMove = true;
     }
@@ -114,10 +75,7 @@ public class Enemy : MonoBehaviour
         _player.AddComboPoints(pointForCombo);
         _canMove = false;
         PushAway();
-        if (_currentHealth <= 0)
-        {
-            Die();
-        }
+        if (_currentHealth <= 0) Die();
     }
 
     private void Die()
